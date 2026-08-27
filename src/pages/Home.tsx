@@ -1,20 +1,12 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  MUSCLE_DETAILS,
-  EXERCISES,
-  MEMBERSHIP_PLANS,
-} from '../data/gymData'
-import type { MembershipTier, MuscleGroup } from '../types'
+import { MEMBERSHIP_PLANS } from '../data/gymData'
+import type { MembershipTier } from '../types'
 import Hero3DCanvas from '../components/3d/Hero3DCanvas'
-import MuscleAnatomyCanvas from '../components/3d/MuscleAnatomyCanvas'
-import DumbbellConfigurator3D from '../components/3d/DumbbellConfigurator3D'
-import GymFloor3DCanvas from '../components/3d/GymFloor3DCanvas'
 import MembershipCard3D from '../components/MembershipCard3D'
 import { buildGymUpiUri, generateGymUpiQr } from '../lib/payment'
 
 export default function Home() {
-  const [selectedMuscle, setSelectedMuscle] = useState<MuscleGroup>('chest')
   const [billingCycle, setBillingCycle] = useState<'month' | 'annual'>('month')
   const [selectedPlanTier, setSelectedPlanTier] = useState<MembershipTier>('gold_vip')
   const [dynamicQrUrl, setDynamicQrUrl] = useState<string>('')
@@ -22,9 +14,6 @@ export default function Home() {
   const [buyerPhone, setBuyerPhone] = useState('')
   const [utrNumber, setUtrNumber] = useState('')
   const [orderSuccess, setOrderSuccess] = useState(false)
-
-  const activeMuscleInfo = MUSCLE_DETAILS[selectedMuscle]
-  const targetedExercises = EXERCISES.filter((e) => e.targetMuscle === selectedMuscle)
 
   const currentPlan = MEMBERSHIP_PLANS.find((p) => p.tier === selectedPlanTier) || MEMBERSHIP_PLANS[2]
   const payablePrice = billingCycle === 'annual' ? currentPlan.priceAnnual : currentPlan.priceMonth
@@ -41,7 +30,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-void text-white font-display overflow-x-hidden pt-20">
-      {/* ── 🥊 BEAT 1: HERO (The Awakening) ── */}
+      {/* ── 🥊 HERO SECTION (3D Titanium Core) ── */}
       <section className="relative min-h-[90vh] flex items-center px-6 border-b border-white/10 overflow-hidden">
         {/* Ambient Neon Glow Backdrops */}
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-volt/15 rounded-full blur-3xl pointer-events-none" />
@@ -63,23 +52,29 @@ export default function Home() {
             </h1>
 
             <p className="text-gray-300 text-base sm:text-lg max-w-xl leading-relaxed">
-              Kolkata’s premier high-performance biomechanics facility. Explore interactive 3D muscle anatomy, customize equipment in real-time 3D, and claim your digital biometric pass.
+              Kolkata’s premier high-performance biomechanics facility. 24/7 biometric turnstile access, certified Olympian coaching, and digital smart membership passes.
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <a
-                href="#anatomy-section"
+                href="#membership-section"
                 className="px-8 py-4 rounded-xl bg-volt text-black font-black text-sm uppercase tracking-wider shadow-volt-glow hover:bg-volt/90 transition-all flex items-center gap-2 cursor-pointer"
               >
-                <span>🧠 Explore 3D Anatomy</span>
+                <span>🎟️ Claim VIP Pass</span>
                 <span>➔</span>
               </a>
-              <a
-                href="#dumbbell-section"
+              <Link
+                to="/workouts"
                 className="px-8 py-4 rounded-xl bg-cyber border border-white/20 text-white font-bold text-sm uppercase tracking-wider hover:bg-white/10 transition-all cursor-pointer"
               >
-                🏋️ 3D Equipment Lab
-              </a>
+                🏋️ Workouts
+              </Link>
+              <Link
+                to="/trainers"
+                className="px-8 py-4 rounded-xl bg-cyber border border-white/20 text-white font-bold text-sm uppercase tracking-wider hover:bg-white/10 transition-all cursor-pointer"
+              >
+                👥 Coaches
+              </Link>
             </div>
 
             {/* Live Stats Ticker */}
@@ -106,132 +101,12 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 🧠 BEAT 2: 3D MUSCLE ANATOMY EXPLORER ── */}
-      <section id="anatomy-section" className="py-24 px-6 bg-cyber/40 border-b border-white/10 relative">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-volt font-mono text-xs uppercase tracking-widest font-bold">
-              TARGETED BIOMECHANICS
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight mt-2 text-white">
-              3D MUSCLE <span className="text-volt">ANATOMY MAP</span>
-            </h2>
-            <p className="text-gray-400 text-sm mt-3">
-              Tap any muscle group on the 3D model below to see optimal biomechanical exercises, form guides, and recovery protocols.
-            </p>
-          </div>
-
-          {/* Quick Muscle Selector Pills */}
-          <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
-            {(Object.keys(MUSCLE_DETAILS) as MuscleGroup[]).map((m) => (
-              <button
-                key={m}
-                type="button"
-                onClick={() => setSelectedMuscle(m)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold uppercase font-mono tracking-wider transition-all cursor-pointer ${
-                  selectedMuscle === m
-                    ? 'bg-volt text-black shadow-volt-glow scale-105'
-                    : 'bg-surface/80 text-gray-300 border border-white/10 hover:border-volt/50'
-                }`}
-              >
-                {MUSCLE_DETAILS[m].name}
-              </button>
-            ))}
-          </div>
-
-          {/* Split Screen: 3D Anatomy Model + Dynamic Workout HUD */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-            {/* 3D Canvas */}
-            <div className="lg:col-span-6">
-              <MuscleAnatomyCanvas
-                selectedMuscle={selectedMuscle}
-                onSelectMuscle={setSelectedMuscle}
-              />
-            </div>
-
-            {/* Dynamic HUD Details */}
-            <div className="lg:col-span-6 space-y-6">
-              <div className="bg-surface/80 border border-white/10 rounded-3xl p-8 backdrop-blur-xl relative overflow-hidden">
-                <div
-                  className="absolute top-0 left-0 right-0 h-1"
-                  style={{ backgroundColor: activeMuscleInfo.color }}
-                />
-
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <span className="text-xs font-mono text-gray-400 uppercase tracking-widest">
-                      {activeMuscleInfo.scientificName}
-                    </span>
-                    <h3 className="text-2xl font-black text-white uppercase mt-0.5">
-                      {activeMuscleInfo.name}
-                    </h3>
-                  </div>
-                  <span className="px-3 py-1 bg-volt/10 text-volt text-xs font-mono font-bold rounded-lg border border-volt/30">
-                    ⏱️ {activeMuscleInfo.recoveryHours}h RECOVERY
-                  </span>
-                </div>
-
-                <p className="text-gray-300 text-sm leading-relaxed mb-6">
-                  {activeMuscleInfo.description}
-                </p>
-
-                <div className="bg-black/40 border border-white/10 rounded-2xl p-4 mb-6">
-                  <span className="text-xs font-mono text-gray-400 uppercase block mb-1">
-                    🥗 RECOMMENDED NUTRITION & FUEL
-                  </span>
-                  <span className="text-sm font-bold text-volt">
-                    {activeMuscleInfo.recommendedProtein}
-                  </span>
-                </div>
-
-                {/* Target Exercises List */}
-                <h4 className="text-xs font-mono text-gray-400 uppercase tracking-widest mb-3">
-                  PRIMARY HYPERTROPHY MOVEMENTS:
-                </h4>
-                <div className="space-y-3">
-                  {targetedExercises.map((ex) => (
-                    <div
-                      key={ex.id}
-                      className="bg-black/30 border border-white/5 p-4 rounded-2xl flex items-center justify-between hover:border-volt/30 transition-all"
-                    >
-                      <div>
-                        <p className="font-bold text-white text-sm">{ex.name}</p>
-                        <p className="text-xs text-gray-400 font-mono mt-0.5">
-                          {ex.equipment} · {ex.defaultSets} Sets × {ex.defaultReps}
-                        </p>
-                      </div>
-                      <span className="px-2.5 py-1 rounded bg-volt/10 text-volt text-[10px] font-mono font-bold">
-                        {ex.difficulty}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 🏋️ BEAT 3: 3D DUMBBELL & EQUIPMENT LAB ── */}
-      <section id="dumbbell-section" className="py-24 px-6 border-b border-white/10 bg-void relative">
-        <div className="max-w-7xl mx-auto">
-          <DumbbellConfigurator3D />
-        </div>
-      </section>
-
-      {/* ── 🏢 BEAT 4: 3D ISOMETRIC VIRTUAL GYM FLOOR TOUR ── */}
-      <section id="floor-tour-section" className="py-24 px-6 border-b border-white/10 bg-cyber/30">
-        <div className="max-w-7xl mx-auto">
-          <GymFloor3DCanvas />
-        </div>
-      </section>
-
-      {/* ── 💳 BEAT 5: MEMBERSHIP PLANS & DYNAMIC UPI CHECKOUT ── */}
+      {/* ── 💳 MEMBERSHIP PLANS & DYNAMIC UPI CHECKOUT ── */}
       <section id="membership-section" className="py-24 px-6 bg-cyber/60 relative">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <span className="text-volt font-mono text-xs uppercase tracking-widest font-bold">
-              MEMBERSHIP TIERS & PASS
+              MEMBERSHIP TIERS & DIGITAL PASS
             </span>
             <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight mt-2 text-white">
               SELECT YOUR <span className="text-volt">TIER</span>

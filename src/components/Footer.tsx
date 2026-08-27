@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function Footer() {
   return (
     <footer className="bg-cyber border-t border-white/10 pt-16 pb-12 px-6 text-white font-display">
@@ -21,13 +23,13 @@ export default function Footer() {
 
         <div>
           <h4 className="text-xs font-mono text-volt uppercase tracking-widest mb-4">
-            EXPERIENCES
+            NAVIGATION
           </h4>
           <ul className="space-y-2.5 text-sm text-gray-300">
-            <li><a href="#anatomy-section" className="hover:text-volt transition-colors">3D Muscle Anatomy Map</a></li>
-            <li><a href="#equipment-section" className="hover:text-volt transition-colors">3D Equipment Exploded View</a></li>
-            <li><a href="#floor-tour-section" className="hover:text-volt transition-colors">Virtual Gym Floor Tour</a></li>
-            <li><a href="#membership-section" className="hover:text-volt transition-colors">Digital Membership Pass</a></li>
+            <li><a href="#membership-section" className="hover:text-volt transition-colors">VIP Membership Pass</a></li>
+            <li><Link to="/workouts" className="hover:text-volt transition-colors">Olympian Workouts</Link></li>
+            <li><Link to="/trainers" className="hover:text-volt transition-colors">Certified Coaches</Link></li>
+            <li><Link to="/dashboard" className="hover:text-volt transition-colors">Member Turnstile Pass</Link></li>
           </ul>
         </div>
 
