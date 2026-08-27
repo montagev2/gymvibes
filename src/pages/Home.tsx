@@ -8,6 +8,8 @@ import {
 import type { MembershipTier, MuscleGroup } from '../types'
 import Hero3DCanvas from '../components/3d/Hero3DCanvas'
 import MuscleAnatomyCanvas from '../components/3d/MuscleAnatomyCanvas'
+import DumbbellConfigurator3D from '../components/3d/DumbbellConfigurator3D'
+import GymFloor3DCanvas from '../components/3d/GymFloor3DCanvas'
 import MembershipCard3D from '../components/MembershipCard3D'
 import { buildGymUpiUri, generateGymUpiQr } from '../lib/payment'
 
@@ -61,22 +63,22 @@ export default function Home() {
             </h1>
 
             <p className="text-gray-300 text-base sm:text-lg max-w-xl leading-relaxed">
-              Kolkata’s premier high-performance biomechanics facility. Explore interactive 3D muscle anatomy, train with certified Olympians, and claim your digital biometric pass.
+              Kolkata’s premier high-performance biomechanics facility. Explore interactive 3D muscle anatomy, customize equipment in real-time 3D, and claim your digital biometric pass.
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <a
                 href="#anatomy-section"
-                className="px-8 py-4 rounded-xl bg-volt text-black font-black text-sm uppercase tracking-wider shadow-volt-glow hover:bg-volt/90 transition-all flex items-center gap-2"
+                className="px-8 py-4 rounded-xl bg-volt text-black font-black text-sm uppercase tracking-wider shadow-volt-glow hover:bg-volt/90 transition-all flex items-center gap-2 cursor-pointer"
               >
                 <span>🧠 Explore 3D Anatomy</span>
                 <span>➔</span>
               </a>
               <a
-                href="#membership-section"
-                className="px-8 py-4 rounded-xl bg-cyber border border-white/20 text-white font-bold text-sm uppercase tracking-wider hover:bg-white/10 transition-all"
+                href="#dumbbell-section"
+                className="px-8 py-4 rounded-xl bg-cyber border border-white/20 text-white font-bold text-sm uppercase tracking-wider hover:bg-white/10 transition-all cursor-pointer"
               >
-                🎟️ View Memberships
+                🏋️ 3D Equipment Lab
               </a>
             </div>
 
@@ -210,78 +212,17 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── 🏢 BEAT 4: VIRTUAL GYM FLOOR BENTO ── */}
-      <section id="floor-tour-section" className="py-24 px-6 border-b border-white/10">
+      {/* ── 🏋️ BEAT 3: 3D DUMBBELL & EQUIPMENT LAB ── */}
+      <section id="dumbbell-section" className="py-24 px-6 border-b border-white/10 bg-void relative">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <span className="text-volt font-mono text-xs uppercase tracking-widest font-bold">
-              15,000 SQ.FT FACILITY
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight mt-2 text-white">
-              VIRTUAL GYM <span className="text-volt">FLOOR TOUR</span>
-            </h2>
-            <p className="text-gray-400 text-sm mt-3">
-              Explore 5 dedicated training labs engineered for raw strength, recovery, and conditioning.
-            </p>
-          </div>
+          <DumbbellConfigurator3D />
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Zone 1 */}
-            <div className="md:col-span-2 bg-gradient-to-br from-surface to-cyber border border-white/10 rounded-3xl p-8 relative overflow-hidden group hover:border-volt/40 transition-all">
-              <div className="text-4xl mb-4">🏋️‍♂️</div>
-              <h3 className="text-2xl font-black text-white uppercase mb-2">
-                ZONE 01: HEAVY IRON PIT
-              </h3>
-              <p className="text-gray-300 text-sm max-w-md leading-relaxed mb-6">
-                Eleiko Olympic Barbells, calibrated steel plates, 10 Power Racks, and calibrated Dumbbells up to 75 KG.
-              </p>
-              <div className="flex items-center gap-3 font-mono text-xs text-volt">
-                <span>✓ Olympic Standard</span>
-                <span>·</span>
-                <span>✓ Sound Dampened Drop Platforms</span>
-              </div>
-            </div>
-
-            {/* Zone 2 */}
-            <div className="bg-gradient-to-br from-surface to-cyber border border-white/10 rounded-3xl p-8 relative overflow-hidden group hover:border-volt/40 transition-all">
-              <div className="text-4xl mb-4">🧊</div>
-              <h3 className="text-xl font-black text-white uppercase mb-2">
-                ZONE 02: RECOVERY LAB
-              </h3>
-              <p className="text-gray-300 text-xs leading-relaxed mb-4">
-                Infrared Dry Sauna (85°C) and Dual Ice Baths (3°C) for accelerated cellular recovery.
-              </p>
-              <span className="text-volt text-xs font-mono font-bold">✓ Included in Silver & VIP</span>
-            </div>
-
-            {/* Zone 3 */}
-            <div className="bg-gradient-to-br from-surface to-cyber border border-white/10 rounded-3xl p-8 relative overflow-hidden group hover:border-volt/40 transition-all">
-              <div className="text-4xl mb-4">⚡</div>
-              <h3 className="text-xl font-black text-white uppercase mb-2">
-                ZONE 03: CROSSFIT TURF
-              </h3>
-              <p className="text-gray-300 text-xs leading-relaxed mb-4">
-                40-meter sled sprint turf, climbing ropes, plyo boxes, and assault air bikes.
-              </p>
-              <span className="text-volt text-xs font-mono font-bold">✓ High-Intensity Conditioning</span>
-            </div>
-
-            {/* Zone 4 */}
-            <div className="md:col-span-2 bg-gradient-to-br from-surface to-cyber border border-white/10 rounded-3xl p-8 relative overflow-hidden group hover:border-volt/40 transition-all">
-              <div className="text-4xl mb-4">🥤</div>
-              <h3 className="text-2xl font-black text-white uppercase mb-2">
-                ZONE 04: FUEL & SMOOTHIE BAR
-              </h3>
-              <p className="text-gray-300 text-sm max-w-md leading-relaxed mb-6">
-                Fresh protein smoothies, cold brew pre-workouts, amino acids, and high-protein meal preps.
-              </p>
-              <div className="flex items-center gap-3 font-mono text-xs text-volt">
-                <span>✓ 100% Zero Sugar Whey</span>
-                <span>·</span>
-                <span>✓ Made-to-Order</span>
-              </div>
-            </div>
-          </div>
+      {/* ── 🏢 BEAT 4: 3D ISOMETRIC VIRTUAL GYM FLOOR TOUR ── */}
+      <section id="floor-tour-section" className="py-24 px-6 border-b border-white/10 bg-cyber/30">
+        <div className="max-w-7xl mx-auto">
+          <GymFloor3DCanvas />
         </div>
       </section>
 

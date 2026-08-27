@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Text } from '@react-three/drei'
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib'
 import * as THREE from 'three'
 import type { MuscleGroup } from '../../types'
 
@@ -59,7 +60,6 @@ function AnatomicalModel({ selectedMuscle, onSelectMuscle }: MuscleAnatomyProps)
       </mesh>
 
       {/* 💥 SHOULDERS (Deltoids) */}
-      {/* Left Delt */}
       <mesh
         position={[-0.6, 1.35, 0]}
         onClick={(e) => { e.stopPropagation(); onSelectMuscle('shoulders') }}
@@ -73,7 +73,6 @@ function AnatomicalModel({ selectedMuscle, onSelectMuscle }: MuscleAnatomyProps)
           emissiveIntensity={0.5}
         />
       </mesh>
-      {/* Right Delt */}
       <mesh
         position={[0.6, 1.35, 0]}
         onClick={(e) => { e.stopPropagation(); onSelectMuscle('shoulders') }}
@@ -89,7 +88,6 @@ function AnatomicalModel({ selectedMuscle, onSelectMuscle }: MuscleAnatomyProps)
       </mesh>
 
       {/* 💥 BICEPS */}
-      {/* Left Bicep */}
       <mesh
         position={[-0.68, 0.95, 0.05]}
         onClick={(e) => { e.stopPropagation(); onSelectMuscle('biceps') }}
@@ -103,7 +101,6 @@ function AnatomicalModel({ selectedMuscle, onSelectMuscle }: MuscleAnatomyProps)
           emissiveIntensity={0.6}
         />
       </mesh>
-      {/* Right Bicep */}
       <mesh
         position={[0.68, 0.95, 0.05]}
         onClick={(e) => { e.stopPropagation(); onSelectMuscle('biceps') }}
@@ -149,7 +146,6 @@ function AnatomicalModel({ selectedMuscle, onSelectMuscle }: MuscleAnatomyProps)
       </mesh>
 
       {/* 💥 QUADS / LEGS */}
-      {/* Left Quad */}
       <mesh
         position={[-0.24, -0.15, 0.05]}
         onClick={(e) => { e.stopPropagation(); onSelectMuscle('quads') }}
@@ -163,7 +159,6 @@ function AnatomicalModel({ selectedMuscle, onSelectMuscle }: MuscleAnatomyProps)
           emissiveIntensity={0.6}
         />
       </mesh>
-      {/* Right Quad */}
       <mesh
         position={[0.24, -0.15, 0.05]}
         onClick={(e) => { e.stopPropagation(); onSelectMuscle('quads') }}
@@ -198,7 +193,6 @@ function AnatomicalModel({ selectedMuscle, onSelectMuscle }: MuscleAnatomyProps)
         position={[0, 2.3, 0]}
         fontSize={0.16}
         color="#CCFF00"
-        font="https://fonts.gstatic.com/s/spacegrotesk/v16/V8mDoQDjQSkFtoMM3T6r8E7mF71Q-g.woff"
         anchorX="center"
         anchorY="middle"
       >
@@ -209,10 +203,56 @@ function AnatomicalModel({ selectedMuscle, onSelectMuscle }: MuscleAnatomyProps)
 }
 
 export default function MuscleAnatomyCanvas({ selectedMuscle, onSelectMuscle }: MuscleAnatomyProps) {
+  const controlsRef = useRef<OrbitControlsImpl>(null)
+
+  const handleResetCamera = (view: 'front' | 'back' | 'legs') => {
+    if (!controlsRef.current) return
+    if (view === 'front') {
+      controlsRef.current.setAzimuthalAngle(0)
+    } else if (view === 'back') {
+      controlsRef.current.setAzimuthalAngle(Math.PI)
+    } else if (view === 'legs') {
+      controlsRef.current.setAzimuthalAngle(0)
+    }
+  }
+
   return (
     <div className="w-full h-[400px] lg:h-[500px] bg-cyber/60 rounded-3xl border border-white/10 relative overflow-hidden">
+      {/* Top Floating Badge */}
       <div className="absolute top-4 left-4 z-10 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-volt/30 text-[11px] font-mono text-volt tracking-widest uppercase">
         ⚡ 3D Interactive Physique · Drag to Rotate
+      </div>
+
+      {/* Bottom Camera Angle Presets for Easy Mobile UX */}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1.5 bg-black/70 backdrop-blur-md p-1.5 rounded-2xl border border-white/10">
+        <button
+          type="button"
+          onClick={() => handleResetCamera('front')}
+          className="px-3 py-1 rounded-xl text-[10px] font-mono uppercase bg-surface hover:bg-volt hover:text-black transition-all cursor-pointer"
+        >
+          Front
+        </button>
+        <button
+          type="button"
+          onClick={() => handleResetCamera('back')}
+          className="px-3 py-1 rounded-xl text-[10px] font-mono uppercase bg-surface hover:bg-volt hover:text-black transition-all cursor-pointer"
+        >
+          Back
+        </button>
+        <button
+          type="button"
+          onClick={() => onSelectMuscle('chest')}
+          className="px-3 py-1 rounded-xl text-[10px] font-mono uppercase bg-volt/20 text-volt hover:bg-volt hover:text-black transition-all cursor-pointer"
+        >
+          Chest
+        </button>
+        <button
+          type="button"
+          onClick={() => onSelectMuscle('quads')}
+          className="px-3 py-1 rounded-xl text-[10px] font-mono uppercase bg-cyanGlow/20 text-cyanGlow hover:bg-cyanGlow hover:text-black transition-all cursor-pointer"
+        >
+          Legs
+        </button>
       </div>
 
       <Canvas camera={{ position: [0, 0.8, 3.6], fov: 48 }}>
@@ -224,6 +264,7 @@ export default function MuscleAnatomyCanvas({ selectedMuscle, onSelectMuscle }: 
         <AnatomicalModel selectedMuscle={selectedMuscle} onSelectMuscle={onSelectMuscle} />
 
         <OrbitControls
+          ref={controlsRef}
           enableZoom={false}
           maxPolarAngle={Math.PI / 1.7}
           minPolarAngle={Math.PI / 2.5}
