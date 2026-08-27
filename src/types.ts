@@ -38,6 +38,16 @@ export interface Exercise {
   defaultReps: string
   caloriesBurn: number
   tips: string[]
+  visualIcon: string
+  primaryBenefit: string
+  tempo: string
+  restSeconds: number
+  steps: {
+    step: number
+    title: string
+    instruction: string
+  }[]
+  mistakes: string[]
 }
 
 export interface WorkoutSet {
